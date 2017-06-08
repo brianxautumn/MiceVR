@@ -28,6 +28,11 @@ public class IntroScript : MonoBehaviour {
 		Application.LoadLevel("IntroFreeGame");
 	}
 
+	public void LoadBinaryGame()
+	{
+		Application.LoadLevel("BinaryGame");
+	}
+
 	public void Exit()
     {
         Application.Quit();
