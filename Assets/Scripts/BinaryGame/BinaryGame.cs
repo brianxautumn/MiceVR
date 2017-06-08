@@ -23,6 +23,7 @@ public class BinaryGame : MonoBehaviour
     public float WhiteLevel;
     public int TrialDelay;
     private float greyLevel;
+    public int PresentationAngle = 45;
 
     public enum TargetSide
     {
@@ -57,6 +58,8 @@ public class BinaryGame : MonoBehaviour
     private GameObject triggerLeft;
     private GameObject triggerRight;
 
+	[SerializeField]
+	private Material presentationMaterial;
     [SerializeField]
     private Material presentationMaterial1;
 	[SerializeField]
@@ -113,174 +116,7 @@ public class BinaryGame : MonoBehaviour
     void Start()
     {
         this.startingPos = new Vector3(1.0f, 5.0f, 5.0f);
-
-        float sidePosition = TunnelWidth / 2.0f;
-        float forkStart = PresentationLength + GreyLength + StartLength;
-        float mazeHeightOffset = MazeHeight / 2.0f;
-
-        BlackLevel = Mathf.Clamp(BlackLevel, 0, 1.0f);
-        WhiteLevel = Mathf.Clamp(WhiteLevel, 0, 1.0f);
-        greyLevel = (BlackLevel + WhiteLevel) / 2.0f;
-
-        // Generate Maze Here
-        tunnelBackWall = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        tunnelBackWall.transform.SetParent(mazeTarget.transform);
-        tunnelBackWall.transform.name = "TunnelBackWall";
-        tunnelBackWall.transform.localScale = new Vector3(TunnelWidth, MazeHeight, wallWidth);
-        tunnelBackWall.transform.localPosition = new Vector3(0, mazeHeightOffset, 0);
-        tunnelBackWall.GetComponent<Renderer>().material = Instantiate(greyMaterial);
-        tunnelBackWall.GetComponent<Renderer>().material.color = new Color(greyLevel, greyLevel, greyLevel, 1.0f);
-
-        startWallLeft = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        startWallLeft.transform.SetParent(mazeTarget.transform);
-        startWallLeft.transform.name = "StartWallLeft";
-        startWallLeft.transform.localScale = new Vector3(StartLength, MazeHeight, wallWidth);
-        startWallLeft.transform.rotation *= Quaternion.Euler(0, 90, 0);
-        startWallLeft.transform.localPosition = new Vector3(-sidePosition, mazeHeightOffset, StartLength / 2.0f);
-		startWallLeft.GetComponent<Renderer>().material = Instantiate(greyMaterial);
-		startWallLeft.GetComponent<Renderer>().material.color = new Color(greyLevel, greyLevel, greyLevel, 1.0f);
-
-        startWallRight = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        startWallRight.transform.SetParent(mazeTarget.transform);
-        startWallRight.transform.name = "StartWallRight";
-        startWallRight.transform.localScale = new Vector3(StartLength, MazeHeight, wallWidth);
-        startWallRight.transform.rotation *= Quaternion.Euler(0, 90, 0);
-        startWallRight.transform.localPosition = new Vector3(sidePosition, mazeHeightOffset, StartLength / 2.0f);
-		startWallRight.GetComponent<Renderer>().material = Instantiate(greyMaterial);
-		startWallRight.GetComponent<Renderer>().material.color = new Color(greyLevel, greyLevel, greyLevel, 1.0f);
-
-        presentationWallLeft = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        presentationWallLeft.transform.SetParent(mazeTarget.transform);
-        presentationWallLeft.transform.name = "PresentationWallLeft";
-        presentationWallLeft.transform.localScale = new Vector3(PresentationLength, MazeHeight, wallWidth);
-        presentationWallLeft.transform.rotation *= Quaternion.Euler(0, 90, 0);
-        presentationWallLeft.transform.localPosition = new Vector3(-sidePosition, mazeHeightOffset, PresentationLength / 2.0f + StartLength);
-        presentationWallLeft.GetComponent<Renderer>().material = Instantiate(presentationMaterial1);
-        // presentationWallLeft.GetComponent<Renderer>().material.color = new Color(WhiteLevel, WhiteLevel, WhiteLevel, 1.0f);
-        presentationWallLeft.GetComponent<Renderer>().material.mainTextureScale = new Vector2(PresentationLength, 1.0f);
-
-		presentationWallRight = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        presentationWallRight.transform.SetParent(mazeTarget.transform);
-        presentationWallRight.transform.name = "PresentationWallRight";
-        presentationWallRight.transform.localScale = new Vector3(PresentationLength, MazeHeight, wallWidth);
-        presentationWallRight.transform.rotation *= Quaternion.Euler(0, 90, 0);
-        presentationWallRight.transform.localPosition = new Vector3(sidePosition, mazeHeightOffset, PresentationLength / 2.0f + StartLength);
-        presentationWallRight.GetComponent<Renderer>().material = Instantiate(presentationMaterial1);
-        presentationWallRight.GetComponent<Renderer>().material.mainTextureScale = new Vector2(PresentationLength, 1.0f);
-
-        if(GreyLength > 0){
-			greyWallLeft = GameObject.CreatePrimitive(PrimitiveType.Cube);
-			greyWallLeft.transform.SetParent(mazeTarget.transform);
-			greyWallLeft.transform.name = "GreyWallLeft";
-            greyWallLeft.transform.localScale = new Vector3(GreyLength, MazeHeight, wallWidth);
-			greyWallLeft.transform.rotation *= Quaternion.Euler(0, -90, 0);
-			greyWallLeft.transform.localPosition = new Vector3(-sidePosition, mazeHeightOffset, GreyLength / 2.0f + PresentationLength + StartLength);
-            greyWallLeft.GetComponent<Renderer>().material = Instantiate(greyMaterial);
-            greyWallLeft.GetComponent<Renderer>().material.color = new Color(greyLevel, greyLevel, greyLevel, 1.0f);
-
-			greyWallRight = GameObject.CreatePrimitive(PrimitiveType.Cube);
-			greyWallRight.transform.SetParent(mazeTarget.transform);
-			greyWallRight.transform.name = "GreyWallRight";
-			greyWallRight.transform.localScale = new Vector3(GreyLength, MazeHeight, wallWidth);
-			greyWallRight.transform.rotation *= Quaternion.Euler(0, 90, 0);
-			greyWallRight.transform.localPosition = new Vector3(sidePosition, mazeHeightOffset, GreyLength / 2.0f + PresentationLength + StartLength);
-			greyWallRight.GetComponent<Renderer>().material = Instantiate(greyMaterial);
-			greyWallRight.GetComponent<Renderer>().material.color = new Color(greyLevel, greyLevel, greyLevel, 1.0f);
-		}
-
-        targetInnerWallLeft = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        targetInnerWallLeft.transform.SetParent(mazeTarget.transform);
-        targetInnerWallLeft.transform.name = "TargetInnerWallLeft";
-        targetInnerWallLeft.transform.localPosition = new Vector3(-sidePosition - TargetDepth / 2.0f, mazeHeightOffset, forkStart);
-        targetInnerWallLeft.transform.localScale = new Vector3(TargetDepth, MazeHeight, wallWidth);
-		targetInnerWallLeft.GetComponent<Renderer>().material = Instantiate(greyMaterial);
-		targetInnerWallLeft.GetComponent<Renderer>().material.color = new Color(greyLevel, greyLevel, greyLevel, 1.0f);
-
-		targetInnerWallRight = GameObject.CreatePrimitive(PrimitiveType.Cube);
-		targetInnerWallRight.transform.SetParent(mazeTarget.transform);
-		targetInnerWallRight.transform.name = "TargetInnerWallLeft";
-		targetInnerWallRight.transform.localPosition = new Vector3(sidePosition + TargetDepth / 2.0f, mazeHeightOffset, forkStart);
-		targetInnerWallRight.transform.localScale = new Vector3(TargetDepth, MazeHeight, wallWidth);
-		targetInnerWallRight.GetComponent<Renderer>().material = Instantiate(greyMaterial);
-		targetInnerWallRight.GetComponent<Renderer>().material.color = new Color(greyLevel, greyLevel, greyLevel, 1.0f);
-
-        targetCapWallLeft = GameObject.CreatePrimitive(PrimitiveType.Cube);
-		targetCapWallLeft.transform.SetParent(mazeTarget.transform);
-		targetCapWallLeft.transform.name = "TargetCapWallLeft";
-        targetCapWallLeft.transform.rotation *= Quaternion.Euler(0, 90, 0);
-        targetCapWallLeft.transform.localPosition = new Vector3(-sidePosition - TargetDepth, mazeHeightOffset, forkStart + TargetLength / 2.0f);
-		targetCapWallLeft.transform.localScale = new Vector3(TargetLength, MazeHeight, wallWidth);
-        targetCapWallLeft.GetComponent<Renderer>().material = Instantiate(presentationMaterial1);
-        targetCapWallLeft.GetComponent<Renderer>().material.mainTextureScale = new Vector2(TargetDepth, 1.0f);
-
-		targetCapWallRight = GameObject.CreatePrimitive(PrimitiveType.Cube);
-		targetCapWallRight.transform.SetParent(mazeTarget.transform);
-		targetCapWallRight.transform.name = "TargetCapWallRight";
-		targetCapWallRight.transform.rotation *= Quaternion.Euler(0, 90, 0);
-		targetCapWallRight.transform.localPosition = new Vector3(sidePosition + TargetDepth, mazeHeightOffset, forkStart + TargetLength / 2.0f);
-		targetCapWallRight.transform.localScale = new Vector3(TargetLength, MazeHeight, wallWidth);
-        targetCapWallRight.GetComponent<Renderer>().material = Instantiate(presentationMaterial1);
-        targetCapWallRight.GetComponent<Renderer>().material.mainTextureScale = new Vector2(TargetDepth, 1.0f);
-
-        targetOuterCapWallLeft = GameObject.CreatePrimitive(PrimitiveType.Cube);
-		targetOuterCapWallLeft.transform.SetParent(mazeTarget.transform);
-		targetOuterCapWallLeft.transform.name = "TargetOuterCapWallLeft";
-        targetOuterCapWallLeft.transform.localPosition = new Vector3(-sidePosition - TargetDepth / 2.0f, mazeHeightOffset, forkStart + TargetLength);
-		targetOuterCapWallLeft.transform.localScale = new Vector3(TargetDepth, MazeHeight, wallWidth);
-        targetOuterCapWallLeft.GetComponent<Renderer>().material = Instantiate(presentationMaterial1);
-        targetOuterCapWallLeft.GetComponent<Renderer>().material.mainTextureScale = new Vector2(TargetLength, 1.0f);
-
-		targetOuterCapWallRight = GameObject.CreatePrimitive(PrimitiveType.Cube);
-		targetOuterCapWallRight.transform.SetParent(mazeTarget.transform);
-		targetOuterCapWallRight.transform.name = "TargetOuterCapWallLeft";
-		targetOuterCapWallRight.transform.localPosition = new Vector3(sidePosition + TargetDepth / 2.0f, mazeHeightOffset, forkStart + TargetLength);
-		targetOuterCapWallRight.transform.localScale = new Vector3(TargetDepth, MazeHeight, wallWidth);
-		targetOuterCapWallRight.GetComponent<Renderer>().material = Instantiate(presentationMaterial1);
-        targetOuterCapWallRight.GetComponent<Renderer>().material.mainTextureScale = new Vector2(TargetLength, 1.0f);
-
-        outerCapWall = GameObject.CreatePrimitive(PrimitiveType.Cube);
-		outerCapWall.transform.SetParent(mazeTarget.transform);
-		outerCapWall.transform.name = "OuterCapWall";
-		outerCapWall.transform.localScale = new Vector3(TunnelWidth, MazeHeight, wallWidth);
-        outerCapWall.transform.localPosition = new Vector3(0.0f, mazeHeightOffset, forkStart + TargetLength);
-		outerCapWall.GetComponent<Renderer>().material = Instantiate(greyMaterial);
-		outerCapWall.GetComponent<Renderer>().material.color = new Color(greyLevel, greyLevel, greyLevel, 1.0f);
-
-        triggerLeft = GameObject.CreatePrimitive(PrimitiveType.Quad);
-        triggerLeft.transform.SetParent(mazeTarget.transform);
-		triggerLeft.transform.name = "TriggerLeft";
-		triggerLeft.transform.rotation *= Quaternion.Euler(0, 90, 0);
-		triggerLeft.transform.localPosition = new Vector3(sidePosition, mazeHeightOffset, forkStart + TargetLength / 2.0f);
-		triggerLeft.transform.localScale = new Vector3(TargetLength, MazeHeight, wallWidth);
-        triggerLeft.transform.GetComponent<Renderer>().enabled = false;
-        BoxCollider leftCollider = triggerLeft.AddComponent<BoxCollider>();
-        ColliderData colliderDataLeft = triggerLeft.AddComponent<ColliderData>();
-        colliderDataLeft.Correct = false;
-        //leftCollider.isTrigger = true;
-        //triggerLeft.AddComponent<MazeTrigger>();
-
-        triggerRight = GameObject.CreatePrimitive(PrimitiveType.Quad);
-        triggerRight.transform.SetParent(mazeTarget.transform);
-		triggerRight.transform.SetParent(mazeTarget.transform);
-		triggerRight.transform.name = "TriggerRight";
-		triggerRight.transform.rotation *= Quaternion.Euler(0, 90, 0);
-		triggerRight.transform.localPosition = new Vector3(-sidePosition, mazeHeightOffset, forkStart + TargetLength / 2.0f);
-		triggerRight.transform.localScale = new Vector3(TargetLength, MazeHeight, wallWidth);
-        triggerRight.transform.GetComponent<Renderer>().enabled = false;
-        BoxCollider rightCollider = triggerRight.AddComponent<BoxCollider>();
-		ColliderData colliderDataRight = triggerRight.AddComponent<ColliderData>();
-		colliderDataLeft.Correct = true;
-        //rightCollider.isTrigger = true;
-        //triggerRight.AddComponent<MazeTrigger>();
-
-        floor = GameObject.CreatePrimitive(PrimitiveType.Quad);
-        floor.transform.SetParent(mazeTarget.transform);
-        floor.transform.name = "Floor";
-        floor.transform.rotation *= Quaternion.Euler(90, 0, 0);
-        float floorLength = TargetLength + PresentationLength + GreyLength + StartLength;
-        floor.transform.localScale = new Vector3(TunnelWidth + 2 * TargetDepth, floorLength, 1.0f);
-        floor.transform.localPosition = new Vector3(0, 0, floorLength / 2.0f);
-        floor.transform.GetComponent<Renderer>().material = floorMaterial;
+        this.BuildMaze();
 
         // mouse.transform.position = new Vector3(1.0f, 5.0f, 5.0f);
 
@@ -312,6 +148,224 @@ public class BinaryGame : MonoBehaviour
 		this.characterController.enableOverlapRecovery = false;
 
 		init();
+    }
+
+    private void BuildMaze()
+    {
+        foreach (Transform child in mazeTarget.transform)
+        {
+            Destroy(child.gameObject);
+        }
+
+		presentationIndex = UnityEngine.Random.Range(0, 2);
+        Debug.Log(presentationIndex);
+		
+
+        int presentationDegrees;
+        int incorrectDegrees;
+
+        if (presentationIndex == 1)
+        {
+            presentationDegrees = PresentationAngle;
+            incorrectDegrees = 0;
+        }
+        else
+        {
+			presentationDegrees = 0;
+			incorrectDegrees = PresentationAngle;
+        }
+
+        float sidePosition = TunnelWidth / 2.0f;
+        float forkStart = PresentationLength + GreyLength + StartLength;
+        float mazeHeightOffset = MazeHeight / 2.0f;
+
+        BlackLevel = Mathf.Clamp(BlackLevel, 0, 1.0f);
+        WhiteLevel = Mathf.Clamp(WhiteLevel, 0, 1.0f);
+        greyLevel = (BlackLevel + WhiteLevel) / 2.0f;
+
+        // Generate Maze Here
+        tunnelBackWall = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        tunnelBackWall.transform.SetParent(mazeTarget.transform);
+        tunnelBackWall.transform.name = "TunnelBackWall";
+        tunnelBackWall.transform.localScale = new Vector3(TunnelWidth, MazeHeight, wallWidth);
+        tunnelBackWall.transform.localPosition = new Vector3(0, mazeHeightOffset, 0);
+        tunnelBackWall.GetComponent<Renderer>().material = Instantiate(greyMaterial);
+        tunnelBackWall.GetComponent<Renderer>().material.color = new Color(greyLevel, greyLevel, greyLevel, 1.0f);
+
+        startWallLeft = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        startWallLeft.transform.SetParent(mazeTarget.transform);
+        startWallLeft.transform.name = "StartWallLeft";
+        startWallLeft.transform.localScale = new Vector3(StartLength, MazeHeight, wallWidth);
+        startWallLeft.transform.rotation *= Quaternion.Euler(0, 90, 0);
+        startWallLeft.transform.localPosition = new Vector3(-sidePosition, mazeHeightOffset, StartLength / 2.0f);
+        startWallLeft.GetComponent<Renderer>().material = Instantiate(greyMaterial);
+        startWallLeft.GetComponent<Renderer>().material.color = new Color(greyLevel, greyLevel, greyLevel, 1.0f);
+
+        startWallRight = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        startWallRight.transform.SetParent(mazeTarget.transform);
+        startWallRight.transform.name = "StartWallRight";
+        startWallRight.transform.localScale = new Vector3(StartLength, MazeHeight, wallWidth);
+        startWallRight.transform.rotation *= Quaternion.Euler(0, 90, 0);
+        startWallRight.transform.localPosition = new Vector3(sidePosition, mazeHeightOffset, StartLength / 2.0f);
+        startWallRight.GetComponent<Renderer>().material = Instantiate(greyMaterial);
+        startWallRight.GetComponent<Renderer>().material.color = new Color(greyLevel, greyLevel, greyLevel, 1.0f);
+
+        presentationWallLeft = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        presentationWallLeft.transform.SetParent(mazeTarget.transform);
+        presentationWallLeft.transform.name = "PresentationWallLeft";
+        presentationWallLeft.transform.localScale = new Vector3(PresentationLength, MazeHeight, wallWidth);
+        presentationWallLeft.transform.rotation *= Quaternion.Euler(0, 90, 0);
+        presentationWallLeft.transform.localPosition = new Vector3(-sidePosition, mazeHeightOffset, PresentationLength / 2.0f + StartLength);
+        presentationWallLeft.GetComponent<Renderer>().material = Instantiate(presentationMaterial);
+        presentationWallLeft.GetComponent<Renderer>().material.SetInt("_Deg", -presentationDegrees);
+        presentationWallLeft.GetComponent<Renderer>().material.mainTextureScale = new Vector2(PresentationLength, 1.0f);
+
+        presentationWallRight = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        presentationWallRight.transform.SetParent(mazeTarget.transform);
+        presentationWallRight.transform.name = "PresentationWallRight";
+        presentationWallRight.transform.localScale = new Vector3(PresentationLength, MazeHeight, wallWidth);
+        presentationWallRight.transform.rotation *= Quaternion.Euler(0, 90, 0);
+        presentationWallRight.transform.localPosition = new Vector3(sidePosition, mazeHeightOffset, PresentationLength / 2.0f + StartLength);
+        presentationWallRight.GetComponent<Renderer>().material = Instantiate(presentationMaterial);
+        presentationWallRight.GetComponent<Renderer>().material.SetInt("_Deg", presentationDegrees);
+        presentationWallRight.GetComponent<Renderer>().material.mainTextureScale = new Vector2(PresentationLength, 1.0f);
+
+        if(GreyLength > 0){
+            greyWallLeft = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            greyWallLeft.transform.SetParent(mazeTarget.transform);
+            greyWallLeft.transform.name = "GreyWallLeft";
+            greyWallLeft.transform.localScale = new Vector3(GreyLength, MazeHeight, wallWidth);
+            greyWallLeft.transform.rotation *= Quaternion.Euler(0, -90, 0);
+            greyWallLeft.transform.localPosition = new Vector3(-sidePosition, mazeHeightOffset, GreyLength / 2.0f + PresentationLength + StartLength);
+            greyWallLeft.GetComponent<Renderer>().material = Instantiate(greyMaterial);
+            greyWallLeft.GetComponent<Renderer>().material.color = new Color(greyLevel, greyLevel, greyLevel, 1.0f);
+
+            greyWallRight = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            greyWallRight.transform.SetParent(mazeTarget.transform);
+            greyWallRight.transform.name = "GreyWallRight";
+            greyWallRight.transform.localScale = new Vector3(GreyLength, MazeHeight, wallWidth);
+            greyWallRight.transform.rotation *= Quaternion.Euler(0, 90, 0);
+            greyWallRight.transform.localPosition = new Vector3(sidePosition, mazeHeightOffset, GreyLength / 2.0f + PresentationLength + StartLength);
+            greyWallRight.GetComponent<Renderer>().material = Instantiate(greyMaterial);
+            greyWallRight.GetComponent<Renderer>().material.color = new Color(greyLevel, greyLevel, greyLevel, 1.0f);
+        }
+
+        targetInnerWallLeft = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        targetInnerWallLeft.transform.SetParent(mazeTarget.transform);
+        targetInnerWallLeft.transform.name = "TargetInnerWallLeft";
+        targetInnerWallLeft.transform.localPosition = new Vector3(-sidePosition - TargetDepth / 2.0f, mazeHeightOffset, forkStart);
+        targetInnerWallLeft.transform.localScale = new Vector3(TargetDepth, MazeHeight, wallWidth);
+        targetInnerWallLeft.GetComponent<Renderer>().material = Instantiate(greyMaterial);
+        targetInnerWallLeft.GetComponent<Renderer>().material.color = new Color(greyLevel, greyLevel, greyLevel, 1.0f);
+
+        targetInnerWallRight = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        targetInnerWallRight.transform.SetParent(mazeTarget.transform);
+        targetInnerWallRight.transform.name = "TargetInnerWallLeft";
+        targetInnerWallRight.transform.localPosition = new Vector3(sidePosition + TargetDepth / 2.0f, mazeHeightOffset, forkStart);
+        targetInnerWallRight.transform.localScale = new Vector3(TargetDepth, MazeHeight, wallWidth);
+        targetInnerWallRight.GetComponent<Renderer>().material = Instantiate(greyMaterial);
+        targetInnerWallRight.GetComponent<Renderer>().material.color = new Color(greyLevel, greyLevel, greyLevel, 1.0f);
+
+        targetCapWallLeft = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        targetCapWallLeft.transform.SetParent(mazeTarget.transform);
+        targetCapWallLeft.transform.name = "TargetCapWallLeft";
+        targetCapWallLeft.transform.rotation *= Quaternion.Euler(0, 90, 0);
+        targetCapWallLeft.transform.localPosition = new Vector3(-sidePosition - TargetDepth, mazeHeightOffset, forkStart + TargetLength / 2.0f);
+        targetCapWallLeft.transform.localScale = new Vector3(TargetLength, MazeHeight, wallWidth);
+
+        targetCapWallRight = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        targetCapWallRight.transform.SetParent(mazeTarget.transform);
+        targetCapWallRight.transform.name = "TargetCapWallRight";
+        targetCapWallRight.transform.rotation *= Quaternion.Euler(0, 90, 0);
+        targetCapWallRight.transform.localPosition = new Vector3(sidePosition + TargetDepth, mazeHeightOffset, forkStart + TargetLength / 2.0f);
+        targetCapWallRight.transform.localScale = new Vector3(TargetLength, MazeHeight, wallWidth);
+
+        targetOuterCapWallLeft = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        targetOuterCapWallLeft.transform.SetParent(mazeTarget.transform);
+        targetOuterCapWallLeft.transform.name = "TargetOuterCapWallLeft";
+        targetOuterCapWallLeft.transform.localPosition = new Vector3(-sidePosition - TargetDepth / 2.0f, mazeHeightOffset, forkStart + TargetLength);
+        targetOuterCapWallLeft.transform.localScale = new Vector3(TargetDepth, MazeHeight, wallWidth);
+
+        targetOuterCapWallRight = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        targetOuterCapWallRight.transform.SetParent(mazeTarget.transform);
+        targetOuterCapWallRight.transform.name = "TargetOuterCapWallRight";
+        targetOuterCapWallRight.transform.localPosition = new Vector3(sidePosition + TargetDepth / 2.0f, mazeHeightOffset, forkStart + TargetLength);
+        targetOuterCapWallRight.transform.localScale = new Vector3(TargetDepth, MazeHeight, wallWidth);
+
+        outerCapWall = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        outerCapWall.transform.SetParent(mazeTarget.transform);
+        outerCapWall.transform.name = "OuterCapWall";
+        outerCapWall.transform.localScale = new Vector3(TunnelWidth, MazeHeight, wallWidth);
+        outerCapWall.transform.localPosition = new Vector3(0.0f, mazeHeightOffset, forkStart + TargetLength);
+        outerCapWall.GetComponent<Renderer>().material = Instantiate(greyMaterial);
+        outerCapWall.GetComponent<Renderer>().material.color = new Color(greyLevel, greyLevel, greyLevel, 1.0f);
+
+        triggerLeft = GameObject.CreatePrimitive(PrimitiveType.Quad);
+        triggerLeft.transform.SetParent(mazeTarget.transform);
+        triggerLeft.transform.name = "TriggerLeft";
+        triggerLeft.transform.rotation *= Quaternion.Euler(0, 90, 0);
+        triggerLeft.transform.localPosition = new Vector3(-sidePosition, mazeHeightOffset, forkStart + TargetLength / 2.0f);
+        triggerLeft.transform.localScale = new Vector3(TargetLength, MazeHeight, wallWidth);
+        triggerLeft.transform.GetComponent<Renderer>().enabled = false;
+        BoxCollider leftCollider = triggerLeft.AddComponent<BoxCollider>();
+        ColliderData colliderDataLeft = triggerLeft.AddComponent<ColliderData>();
+
+        triggerRight = GameObject.CreatePrimitive(PrimitiveType.Quad);
+        triggerRight.transform.SetParent(mazeTarget.transform);
+        triggerRight.transform.SetParent(mazeTarget.transform);
+        triggerRight.transform.name = "TriggerRight";
+        triggerRight.transform.rotation *= Quaternion.Euler(0, 90, 0);
+        triggerRight.transform.localPosition = new Vector3(sidePosition, mazeHeightOffset, forkStart + TargetLength / 2.0f);
+        triggerRight.transform.localScale = new Vector3(TargetLength, MazeHeight, wallWidth);
+        triggerRight.transform.GetComponent<Renderer>().enabled = false;
+        BoxCollider rightCollider = triggerRight.AddComponent<BoxCollider>();
+        ColliderData colliderDataRight = triggerRight.AddComponent<ColliderData>();
+
+        targetSide = (TargetSide)UnityEngine.Random.Range(0, 2);
+        Debug.Log("Target Side is : " + targetSide);
+        Debug.Log(presentationDegrees);
+        if(targetSide == TargetSide.Left)
+        {
+            colliderDataLeft.Correct = true;
+
+            targetOuterCapWallLeft.GetComponent<Renderer>().material = Instantiate(presentationMaterial);
+            targetOuterCapWallLeft.GetComponent<Renderer>().material.SetInt("_Deg", -presentationDegrees);
+
+            targetCapWallLeft.GetComponent<Renderer>().material = Instantiate(presentationMaterial);
+            targetCapWallLeft.GetComponent<Renderer>().material.SetInt("_Deg", -presentationDegrees);
+
+            targetOuterCapWallRight.GetComponent<Renderer>().material = Instantiate(presentationMaterial);
+            targetOuterCapWallRight.GetComponent<Renderer>().material.SetInt("_Deg", incorrectDegrees);
+
+            targetCapWallRight.GetComponent<Renderer>().material = Instantiate(presentationMaterial);
+            targetCapWallRight.GetComponent<Renderer>().material.SetInt("_Deg", incorrectDegrees);
+        }
+        else
+        {
+			colliderDataRight.Correct = true;
+
+			targetOuterCapWallRight.GetComponent<Renderer>().material = Instantiate(presentationMaterial);
+			targetOuterCapWallRight.GetComponent<Renderer>().material.SetInt("_Deg", -presentationDegrees);
+
+			targetCapWallRight.GetComponent<Renderer>().material = Instantiate(presentationMaterial);
+			targetCapWallRight.GetComponent<Renderer>().material.SetInt("_Deg", -presentationDegrees);
+
+            targetOuterCapWallLeft.GetComponent<Renderer>().material = Instantiate(presentationMaterial);
+			targetOuterCapWallLeft.GetComponent<Renderer>().material.SetInt("_Deg", incorrectDegrees);
+
+            targetCapWallLeft.GetComponent<Renderer>().material = Instantiate(presentationMaterial);
+            targetCapWallLeft.GetComponent<Renderer>().material.SetInt("_Deg", incorrectDegrees); 
+        }
+
+        floor = GameObject.CreatePrimitive(PrimitiveType.Quad);
+        floor.transform.SetParent(mazeTarget.transform);
+        floor.transform.name = "Floor";
+        floor.transform.rotation *= Quaternion.Euler(90, 0, 0);
+        float floorLength = TargetLength + PresentationLength + GreyLength + StartLength;
+        floor.transform.localScale = new Vector3(TunnelWidth + 2 * TargetDepth, floorLength, 1.0f);
+        floor.transform.localPosition = new Vector3(0, 0, floorLength / 2.0f);
+        floor.transform.GetComponent<Renderer>().material = floorMaterial;
+
     }
 
 	public void init()
@@ -624,6 +678,8 @@ public class BinaryGame : MonoBehaviour
      * */
 	public void ResetScenario(Color c)
 	{
+        this.BuildMaze();
+
 		this.runTime = Time.time;
 		this.runNumber++;
 
