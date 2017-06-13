@@ -13,14 +13,20 @@ public class BinaryGame : MonoBehaviour
 {
 
     public float TargetLength;
+    public InputField TargetLengthInput;
     public float GreyLength;
+    public InputField GreyLengthInput;
     public float PresentationLength;
+    public InputField PresentationLengthInput;
     public float TunnelWidth;
+    public InputField TargetDepthInput;
     public float TargetDepth;
     public float MazeHeight;
     public float StartLength;
     public float BlackLevel;
+    public InputField BlackLevelInput;
     public float WhiteLevel;
+    public InputField WhiteInput;
     public int TrialDelay;
     private float greyLevel;
     public int PresentationAngle = 45;
@@ -39,6 +45,8 @@ public class BinaryGame : MonoBehaviour
 
     [SerializeField]
     private GameObject mazeTarget;
+	[SerializeField]
+	private GameObject inGamePanel;
     // Maze walls
     private GameObject startWallLeft;
     private GameObject startWallRight;
@@ -115,6 +123,14 @@ public class BinaryGame : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        // Fill in defualts
+        this.TargetLengthInput.text = this.TargetLength.ToString();
+        this.GreyLengthInput.text = this.GreyLength.ToString();
+        this.PresentationLengthInput.text = this.PresentationLength.ToString();
+        this.TargetDepthInput.text = this.TargetDepth.ToString();
+        this.BlackLevelInput.text = this.BlackLevel.ToString();
+        this.WhiteInput.text = this.WhiteLevel.ToString();
+
         this.startingPos = new Vector3(1.0f, 5.0f, 5.0f);
         this.BuildMaze();
 
@@ -156,6 +172,14 @@ public class BinaryGame : MonoBehaviour
         {
             Destroy(child.gameObject);
         }
+
+		// Capture user controlled params
+        this.TargetLength = float.Parse(this.TargetLengthInput.text);
+        this.GreyLength = float.Parse(this.GreyLengthInput.text);
+        this.PresentationLength = float.Parse(this.PresentationLengthInput.text);
+        this.TargetDepth = float.Parse(this.TargetDepthInput.text);
+        this.BlackLevel = float.Parse(this.BlackLevelInput.text);
+        this.WhiteLevel = float.Parse(this.WhiteInput.text);
 
 		presentationIndex = UnityEngine.Random.Range(0, 2);
         Debug.Log(presentationIndex);
@@ -450,8 +474,17 @@ public class BinaryGame : MonoBehaviour
 
 	private void CatchKeyStrokes()
 	{
-		if (Input.GetKey(KeyCode.Escape))
-			this.state = "GameOver";
+        if (Input.GetKey(KeyCode.Escape))
+        {
+            this.state = "GameOver";
+        }
+			
+
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            this.inGamePanel.SetActive(!this.inGamePanel.activeSelf);
+        }
+			
 
 		if (!this.state.Equals("LoadScenario") || (this.state.Equals("LoadScenario") && EventSystem.current.currentSelectedGameObject == null))
 		{
