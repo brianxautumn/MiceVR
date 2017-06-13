@@ -11,7 +11,7 @@ using UnityEngine.EventSystems;
 
 public class BinaryGame : MonoBehaviour
 {
-
+    public GameObject ChangePanel;
     public float TargetLength;
     public InputField TargetLengthInput;
     public float GreyLength;
@@ -30,6 +30,10 @@ public class BinaryGame : MonoBehaviour
     public int TrialDelay;
     private float greyLevel;
     public int PresentationAngle = 45;
+    public Dropdown FloorDropdown;
+    public Dropdown SkyDropdown;
+    public Material SkyboxNormal;
+    public Shader UnlitShader;
 
     public enum TargetSide
     {
@@ -166,8 +170,13 @@ public class BinaryGame : MonoBehaviour
 		init();
     }
 
-    private void BuildMaze()
+    public void ChangesDetected()
     {
+        
+    }
+
+    private void BuildMaze()
+    {                   
         foreach (Transform child in mazeTarget.transform)
         {
             Destroy(child.gameObject);
@@ -180,6 +189,11 @@ public class BinaryGame : MonoBehaviour
         this.TargetDepth = float.Parse(this.TargetDepthInput.text);
         this.BlackLevel = float.Parse(this.BlackLevelInput.text);
         this.WhiteLevel = float.Parse(this.WhiteInput.text);
+        this.greyLevel = (this.BlackLevel + this.WhiteLevel) / 2.0f;
+        Debug.Log(greyLevel);
+        Color greyColor = new Color(greyLevel, greyLevel, greyLevel);
+        Color blackColor = new Color(this.BlackLevel, this.BlackLevel, this.BlackLevel);
+        Color whiteColor = new Color(this.WhiteLevel, this.WhiteLevel, this.WhiteLevel);
 
 		presentationIndex = UnityEngine.Random.Range(0, 2);
         Debug.Log(presentationIndex);
@@ -203,8 +217,8 @@ public class BinaryGame : MonoBehaviour
         float forkStart = PresentationLength + GreyLength + StartLength;
         float mazeHeightOffset = MazeHeight / 2.0f;
 
-        BlackLevel = Mathf.Clamp(BlackLevel, 0, 1.0f);
-        WhiteLevel = Mathf.Clamp(WhiteLevel, 0, 1.0f);
+        // BlackLevel = Mathf.Clamp(BlackLevel, 0, 1.0f);
+        // WhiteLevel = Mathf.Clamp(WhiteLevel, 0, 1.0f);
         greyLevel = (BlackLevel + WhiteLevel) / 2.0f;
 
         // Generate Maze Here
@@ -214,7 +228,7 @@ public class BinaryGame : MonoBehaviour
         tunnelBackWall.transform.localScale = new Vector3(TunnelWidth, MazeHeight, wallWidth);
         tunnelBackWall.transform.localPosition = new Vector3(0, mazeHeightOffset, 0);
         tunnelBackWall.GetComponent<Renderer>().material = Instantiate(greyMaterial);
-        tunnelBackWall.GetComponent<Renderer>().material.color = new Color(greyLevel, greyLevel, greyLevel, 1.0f);
+        tunnelBackWall.GetComponent<Renderer>().material.color = greyColor;
 
         startWallLeft = GameObject.CreatePrimitive(PrimitiveType.Cube);
         startWallLeft.transform.SetParent(mazeTarget.transform);
@@ -223,7 +237,7 @@ public class BinaryGame : MonoBehaviour
         startWallLeft.transform.rotation *= Quaternion.Euler(0, 90, 0);
         startWallLeft.transform.localPosition = new Vector3(-sidePosition, mazeHeightOffset, StartLength / 2.0f);
         startWallLeft.GetComponent<Renderer>().material = Instantiate(greyMaterial);
-        startWallLeft.GetComponent<Renderer>().material.color = new Color(greyLevel, greyLevel, greyLevel, 1.0f);
+        startWallLeft.GetComponent<Renderer>().material.color = greyColor;
 
         startWallRight = GameObject.CreatePrimitive(PrimitiveType.Cube);
         startWallRight.transform.SetParent(mazeTarget.transform);
@@ -232,7 +246,7 @@ public class BinaryGame : MonoBehaviour
         startWallRight.transform.rotation *= Quaternion.Euler(0, 90, 0);
         startWallRight.transform.localPosition = new Vector3(sidePosition, mazeHeightOffset, StartLength / 2.0f);
         startWallRight.GetComponent<Renderer>().material = Instantiate(greyMaterial);
-        startWallRight.GetComponent<Renderer>().material.color = new Color(greyLevel, greyLevel, greyLevel, 1.0f);
+        startWallRight.GetComponent<Renderer>().material.color = greyColor;
 
         presentationWallLeft = GameObject.CreatePrimitive(PrimitiveType.Cube);
         presentationWallLeft.transform.SetParent(mazeTarget.transform);
@@ -262,7 +276,7 @@ public class BinaryGame : MonoBehaviour
             greyWallLeft.transform.rotation *= Quaternion.Euler(0, -90, 0);
             greyWallLeft.transform.localPosition = new Vector3(-sidePosition, mazeHeightOffset, GreyLength / 2.0f + PresentationLength + StartLength);
             greyWallLeft.GetComponent<Renderer>().material = Instantiate(greyMaterial);
-            greyWallLeft.GetComponent<Renderer>().material.color = new Color(greyLevel, greyLevel, greyLevel, 1.0f);
+            greyWallLeft.GetComponent<Renderer>().material.color = greyColor;
 
             greyWallRight = GameObject.CreatePrimitive(PrimitiveType.Cube);
             greyWallRight.transform.SetParent(mazeTarget.transform);
@@ -271,7 +285,7 @@ public class BinaryGame : MonoBehaviour
             greyWallRight.transform.rotation *= Quaternion.Euler(0, 90, 0);
             greyWallRight.transform.localPosition = new Vector3(sidePosition, mazeHeightOffset, GreyLength / 2.0f + PresentationLength + StartLength);
             greyWallRight.GetComponent<Renderer>().material = Instantiate(greyMaterial);
-            greyWallRight.GetComponent<Renderer>().material.color = new Color(greyLevel, greyLevel, greyLevel, 1.0f);
+            greyWallRight.GetComponent<Renderer>().material.color = greyColor;
         }
 
         targetInnerWallLeft = GameObject.CreatePrimitive(PrimitiveType.Cube);
@@ -280,7 +294,7 @@ public class BinaryGame : MonoBehaviour
         targetInnerWallLeft.transform.localPosition = new Vector3(-sidePosition - TargetDepth / 2.0f, mazeHeightOffset, forkStart);
         targetInnerWallLeft.transform.localScale = new Vector3(TargetDepth, MazeHeight, wallWidth);
         targetInnerWallLeft.GetComponent<Renderer>().material = Instantiate(greyMaterial);
-        targetInnerWallLeft.GetComponent<Renderer>().material.color = new Color(greyLevel, greyLevel, greyLevel, 1.0f);
+        targetInnerWallLeft.GetComponent<Renderer>().material.color = greyColor;
 
         targetInnerWallRight = GameObject.CreatePrimitive(PrimitiveType.Cube);
         targetInnerWallRight.transform.SetParent(mazeTarget.transform);
@@ -288,7 +302,7 @@ public class BinaryGame : MonoBehaviour
         targetInnerWallRight.transform.localPosition = new Vector3(sidePosition + TargetDepth / 2.0f, mazeHeightOffset, forkStart);
         targetInnerWallRight.transform.localScale = new Vector3(TargetDepth, MazeHeight, wallWidth);
         targetInnerWallRight.GetComponent<Renderer>().material = Instantiate(greyMaterial);
-        targetInnerWallRight.GetComponent<Renderer>().material.color = new Color(greyLevel, greyLevel, greyLevel, 1.0f);
+        targetInnerWallRight.GetComponent<Renderer>().material.color = greyColor;
 
         targetCapWallLeft = GameObject.CreatePrimitive(PrimitiveType.Cube);
         targetCapWallLeft.transform.SetParent(mazeTarget.transform);
@@ -322,7 +336,7 @@ public class BinaryGame : MonoBehaviour
         outerCapWall.transform.localScale = new Vector3(TunnelWidth, MazeHeight, wallWidth);
         outerCapWall.transform.localPosition = new Vector3(0.0f, mazeHeightOffset, forkStart + TargetLength);
         outerCapWall.GetComponent<Renderer>().material = Instantiate(greyMaterial);
-        outerCapWall.GetComponent<Renderer>().material.color = new Color(greyLevel, greyLevel, greyLevel, 1.0f);
+        outerCapWall.GetComponent<Renderer>().material.color = greyColor;
 
         triggerLeft = GameObject.CreatePrimitive(PrimitiveType.Quad);
         triggerLeft.transform.SetParent(mazeTarget.transform);
@@ -367,19 +381,36 @@ public class BinaryGame : MonoBehaviour
         else
         {
 			colliderDataRight.Correct = true;
-
 			targetOuterCapWallRight.GetComponent<Renderer>().material = Instantiate(presentationMaterial);
 			targetOuterCapWallRight.GetComponent<Renderer>().material.SetInt("_Deg", -presentationDegrees);
-
 			targetCapWallRight.GetComponent<Renderer>().material = Instantiate(presentationMaterial);
 			targetCapWallRight.GetComponent<Renderer>().material.SetInt("_Deg", -presentationDegrees);
-
             targetOuterCapWallLeft.GetComponent<Renderer>().material = Instantiate(presentationMaterial);
 			targetOuterCapWallLeft.GetComponent<Renderer>().material.SetInt("_Deg", incorrectDegrees);
-
             targetCapWallLeft.GetComponent<Renderer>().material = Instantiate(presentationMaterial);
             targetCapWallLeft.GetComponent<Renderer>().material.SetInt("_Deg", incorrectDegrees); 
         }
+
+        // int vFreq = 10;
+        presentationWallRight.GetComponent<Renderer>().material.SetInt("_VFreq", (int) PresentationLength);
+        presentationWallRight.GetComponent<Renderer>().material.SetColor("_Color2", blackColor);
+        presentationWallRight.GetComponent<Renderer>().material.SetColor("_Color1", whiteColor);
+        targetOuterCapWallRight.GetComponent<Renderer>().material.SetInt("_VFreq", (int)(TargetLength));
+        targetOuterCapWallRight.GetComponent<Renderer>().material.SetColor("_Color1", whiteColor);
+        targetOuterCapWallRight.GetComponent<Renderer>().material.SetColor("_Color2", blackColor);
+        targetCapWallRight.GetComponent<Renderer>().material.SetInt("_VFreq", (int) TargetDepth);
+        targetCapWallRight.GetComponent<Renderer>().material.SetColor("_Color1", whiteColor);
+        targetCapWallRight.GetComponent<Renderer>().material.SetColor("_Color2", blackColor);
+
+        presentationWallLeft.GetComponent<Renderer>().material.SetInt("_VFreq", (int)PresentationLength);
+        presentationWallLeft.GetComponent<Renderer>().material.SetColor("_Color1", whiteColor);
+        presentationWallLeft.GetComponent<Renderer>().material.SetColor("_Color2", blackColor);
+        targetOuterCapWallLeft.GetComponent<Renderer>().material.SetInt("_VFreq", (int)(TargetLength));
+        targetOuterCapWallLeft.GetComponent<Renderer>().material.SetColor("_Color1", whiteColor);
+        targetOuterCapWallLeft.GetComponent<Renderer>().material.SetColor("_Color2", blackColor);
+        targetCapWallLeft.GetComponent<Renderer>().material.SetInt("_VFreq", (int)TargetDepth);
+        targetCapWallLeft.GetComponent<Renderer>().material.SetColor("_Color1", whiteColor);
+        targetCapWallLeft.GetComponent<Renderer>().material.SetColor("_Color2", blackColor);
 
         floor = GameObject.CreatePrimitive(PrimitiveType.Quad);
         floor.transform.SetParent(mazeTarget.transform);
@@ -388,7 +419,29 @@ public class BinaryGame : MonoBehaviour
         float floorLength = TargetLength + PresentationLength + GreyLength + StartLength;
         floor.transform.localScale = new Vector3(TunnelWidth + 2 * TargetDepth, floorLength, 1.0f);
         floor.transform.localPosition = new Vector3(0, 0, floorLength / 2.0f);
-        floor.transform.GetComponent<Renderer>().material = floorMaterial;
+
+        switch(FloorDropdown.value)
+        {
+            case 0:
+                floor.transform.GetComponent<Renderer>().material = floorMaterial;
+                break;
+            case 1:
+                floor.transform.GetComponent<Renderer>().material.color = greyColor;
+                break;
+        }
+
+        switch (SkyDropdown.value)
+		{
+			case 0:
+                RenderSettings.skybox = SkyboxNormal;
+				break;
+			case 1:
+                Material sky = Instantiate(greyMaterial);
+                sky.color = greyColor;
+                sky.shader = UnlitShader;
+                RenderSettings.skybox = sky;
+				break;
+		}
 
     }
 
