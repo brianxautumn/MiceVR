@@ -35,6 +35,12 @@ public class BinaryGame : MonoBehaviour
     public Material SkyboxNormal;
     public Shader UnlitShader;
 
+    // Time fields
+    public int TimeOut;
+    public int Penalty;
+    public InputField TimeOutInput;
+    public InputField PenaltyInput;
+
     public enum TargetSide
     {
         Left,
@@ -134,6 +140,8 @@ public class BinaryGame : MonoBehaviour
         this.TargetDepthInput.text = this.TargetDepth.ToString();
         this.BlackLevelInput.text = this.BlackLevel.ToString();
         this.WhiteInput.text = this.WhiteLevel.ToString();
+        this.TimeOutInput.text = this.TimeOut.ToString();
+        this.PenaltyInput.text = this.Penalty.ToString();
 
         this.startingPos = new Vector3(1.0f, 5.0f, 5.0f);
         this.BuildMaze();
@@ -182,7 +190,10 @@ public class BinaryGame : MonoBehaviour
             Destroy(child.gameObject);
         }
 
-		// Capture user controlled params
+
+        // Capture user controlled params
+        this.Penalty = int.Parse(this.PenaltyInput.text);
+        this.TimeOut = int.Parse(this.TimeOutInput.text);
         this.TargetLength = float.Parse(this.TargetLengthInput.text);
         this.GreyLength = float.Parse(this.GreyLengthInput.text);
         this.PresentationLength = float.Parse(this.PresentationLengthInput.text);
@@ -890,6 +901,7 @@ public class BinaryGame : MonoBehaviour
 
 	public void GiveReward(int rewardDur, bool addToTurns)
 	{
+        TrialDelay = TimeOut;
 		GameObject.Find("UDPSender").GetComponent<UDPSend>().SendWaterReward(rewardDur);
 		player.GetComponent<AudioSource>().Play();
 		Globals.numberOfEarnedRewards++;
@@ -921,6 +933,7 @@ public class BinaryGame : MonoBehaviour
 
 	public void WitholdReward()
 	{
+        TrialDelay = TimeOut + Penalty;
         ResetScenario(Color.white);
         /*
 		Globals.hasNotTurned = false;
