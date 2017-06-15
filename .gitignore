@@ -4,7 +4,7 @@
 /[Bb]uild/
 /[Bb]uilds/
 /Assets/AssetStoreTools*
-config/
+# config/
 replays/
 ProjectSettings/ProjectSettings.asset
 ProjectSettings/ProjectVersion.txt
@@ -33,3 +33,4 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
+y

@@ -1,0 +1,24 @@
+<document>
+	<config>
+		<!-- in seconds -->
+		<runDuration>3600</runDuration>
+		
+		<numberOfRuns>333</numberOfRuns>
+		<numberOfAllRewards>333</numberOfAllRewards>
+		
+		<rawSpeedDivider>-160</rawSpeedDivider>
+		<rawRotationDivider>5000</rawRotationDivider>
+		
+		<rewardDur>33</rewardDur>  <!-- in milliseconds -->
+		<rewardSize>2.2</rewardSize>  <!-- in ul -->
+		
+		<treeVisibleOnCenterScreen>30</treeVisibleOnCenterScreen> 
+		<!-- Degrees from the tree side that allow tree visibility on center screen.
+			 For example, 30 degrees would allow 1/4 of the center screen to show the tree
+			 A setting of 60 degrees would display the tree only in 1 hemifield, but
+			 because a small central portion of the hemifield is transmitted to both 
+			 V1 hemispheres, this might allow the mouse to use the intact hemisphere to
+			 do the task after unilateral lesion.  So set to 30 degrees to be conservative.
+		-->
+	 </config>
+</document>
