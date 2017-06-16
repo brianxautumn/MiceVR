@@ -242,6 +242,9 @@ public class BinaryGame : MonoBehaviour
             calculatedPresentationAngle = this.AngleLow + ((angleRange / this.AngleStep) * selectedStep);
         }
 
+        int innerAngle = 90 - calculatedPresentationAngle;
+        int innerAngle2 = 180 - 90 - innerAngle;
+
         Debug.Log("Presentation calc : " + calculatedPresentationAngle);
 
 		if (UnityEngine.Random.Range(0, 2) == 1)
@@ -416,48 +419,86 @@ public class BinaryGame : MonoBehaviour
             colliderDataLeft.Correct = true;
 
             targetOuterCapWallLeft.GetComponent<Renderer>().material = Instantiate(presentationMaterial);
-            targetOuterCapWallLeft.GetComponent<Renderer>().material.SetInt("_Deg", -presentationDegrees);
-
+            //targetOuterCapWallLeft.GetComponent<Renderer>().material.SetInt("_Deg", -presentationDegrees);
+           
             targetCapWallLeft.GetComponent<Renderer>().material = Instantiate(presentationMaterial);
-            targetCapWallLeft.GetComponent<Renderer>().material.SetInt("_Deg", -presentationDegrees);
+            //targetCapWallLeft.GetComponent<Renderer>().material.SetInt("_Deg", -presentationDegrees);
 
             targetOuterCapWallRight.GetComponent<Renderer>().material = Instantiate(presentationMaterial);
-            targetOuterCapWallRight.GetComponent<Renderer>().material.SetInt("_Deg", incorrectDegrees);
+            //targetOuterCapWallRight.GetComponent<Renderer>().material.SetInt("_Deg", incorrectDegrees);
 
             targetCapWallRight.GetComponent<Renderer>().material = Instantiate(presentationMaterial);
-            targetCapWallRight.GetComponent<Renderer>().material.SetInt("_Deg", incorrectDegrees);
+            //targetCapWallRight.GetComponent<Renderer>().material.SetInt("_Deg", incorrectDegrees);
+
+            //presentationWallRight.GetComponent<Renderer>().material.SetFloat("_VFreq", this.calculateVfreq(-presentationDegrees, PresentationLength));
+            //presentationWallLeft.GetComponent<Renderer>().material.SetFloat("_VFreq", this.calculateVfreq(presentationDegrees, PresentationLength));
+            this.adjustStripes(presentationWallRight, -presentationDegrees);
+            this.adjustStripes(presentationWallLeft, presentationDegrees);
+
+            //correct side
+            //targetOuterCapWallLeft.GetComponent<Renderer>().material.SetFloat("_VFreq", this.calculateVfreq(presentationDegrees, TargetDepth));
+            //targetCapWallLeft.GetComponent<Renderer>().material.SetFloat("_VFreq", this.calculateVfreq(presentationDegrees, TargetLength));
+			this.adjustStripes(targetOuterCapWallLeft, presentationDegrees);
+			this.adjustStripes(targetCapWallLeft, presentationDegrees);
+
+            //incorrect side
+            //targetOuterCapWallRight.GetComponent<Renderer>().material.SetFloat("_VFreq", this.calculateVfreq(incorrectDegrees, TargetDepth));
+            //targetCapWallRight.GetComponent<Renderer>().material.SetFloat("_VFreq", this.calculateVfreq(incorrectDegrees, TargetLength));
+			this.adjustStripes(targetOuterCapWallRight, incorrectDegrees);
+			this.adjustStripes(targetCapWallRight, incorrectDegrees);
         }
         else
         {
 			colliderDataRight.Correct = true;
 			targetOuterCapWallRight.GetComponent<Renderer>().material = Instantiate(presentationMaterial);
-			targetOuterCapWallRight.GetComponent<Renderer>().material.SetInt("_Deg", -presentationDegrees);
+			//targetOuterCapWallRight.GetComponent<Renderer>().material.SetInt("_Deg", -presentationDegrees);
 			targetCapWallRight.GetComponent<Renderer>().material = Instantiate(presentationMaterial);
-			targetCapWallRight.GetComponent<Renderer>().material.SetInt("_Deg", -presentationDegrees);
+			//targetCapWallRight.GetComponent<Renderer>().material.SetInt("_Deg", -presentationDegrees);
             targetOuterCapWallLeft.GetComponent<Renderer>().material = Instantiate(presentationMaterial);
-			targetOuterCapWallLeft.GetComponent<Renderer>().material.SetInt("_Deg", incorrectDegrees);
+			//targetOuterCapWallLeft.GetComponent<Renderer>().material.SetInt("_Deg", incorrectDegrees);
             targetCapWallLeft.GetComponent<Renderer>().material = Instantiate(presentationMaterial);
-            targetCapWallLeft.GetComponent<Renderer>().material.SetInt("_Deg", incorrectDegrees); 
+            //targetCapWallLeft.GetComponent<Renderer>().material.SetInt("_Deg", incorrectDegrees);
+
+			//presentationWallRight.GetComponent<Renderer>().material.SetFloat("_VFreq", this.calculateVfreq(-presentationDegrees , PresentationLength));
+			//presentationWallLeft.GetComponent<Renderer>().material.SetFloat("_VFreq", this.calculateVfreq(presentationDegrees, PresentationLength));
+			this.adjustStripes(presentationWallRight, -presentationDegrees);
+			this.adjustStripes(presentationWallLeft, presentationDegrees);
+
+			//incorrect side
+			//targetOuterCapWallLeft.GetComponent<Renderer>().material.SetFloat("_VFreq", this.calculateVfreq(incorrectDegrees, TargetDepth));
+			//targetCapWallLeft.GetComponent<Renderer>().material.SetFloat("_VFreq", this.calculateVfreq(incorrectDegrees, TargetLength));
+            this.adjustStripes(targetOuterCapWallLeft, incorrectDegrees);
+            this.adjustStripes(targetCapWallLeft, incorrectDegrees);
+
+			//correct side
+			//targetOuterCapWallRight.GetComponent<Renderer>().material.SetFloat("_VFreq", this.calculateVfreq(presentationDegrees, TargetDepth));
+			//targetCapWallRight.GetComponent<Renderer>().material.SetFloat("_VFreq", this.calculateVfreq(presentationDegrees, TargetLength));
+			this.adjustStripes(targetOuterCapWallRight, presentationDegrees);
+			this.adjustStripes(targetCapWallRight, presentationDegrees);
         }
 
         // int vFreq = 10;
-        presentationWallRight.GetComponent<Renderer>().material.SetInt("_VFreq", (int) PresentationLength);
+        //presentationWallRight.GetComponent<Renderer>().material.SetFloat("_VFreq", PresentationLength);
         presentationWallRight.GetComponent<Renderer>().material.SetColor("_Color2", blackColor);
         presentationWallRight.GetComponent<Renderer>().material.SetColor("_Color1", whiteColor);
-        targetOuterCapWallRight.GetComponent<Renderer>().material.SetInt("_VFreq", (int)(TargetLength));
+
+        //targetOuterCapWallRight.GetComponent<Renderer>().material.SetFloat("_VFreq", TargetLength);
         targetOuterCapWallRight.GetComponent<Renderer>().material.SetColor("_Color1", whiteColor);
         targetOuterCapWallRight.GetComponent<Renderer>().material.SetColor("_Color2", blackColor);
-        targetCapWallRight.GetComponent<Renderer>().material.SetInt("_VFreq", (int) TargetDepth);
+
+        //targetCapWallRight.GetComponent<Renderer>().material.SetInt("_VFreq", (int) TargetDepth);
         targetCapWallRight.GetComponent<Renderer>().material.SetColor("_Color1", whiteColor);
         targetCapWallRight.GetComponent<Renderer>().material.SetColor("_Color2", blackColor);
 
-        presentationWallLeft.GetComponent<Renderer>().material.SetInt("_VFreq", (int)PresentationLength);
+        //presentationWallLeft.GetComponent<Renderer>().material.SetFloat("_VFreq", PresentationLength);
         presentationWallLeft.GetComponent<Renderer>().material.SetColor("_Color1", whiteColor);
         presentationWallLeft.GetComponent<Renderer>().material.SetColor("_Color2", blackColor);
-        targetOuterCapWallLeft.GetComponent<Renderer>().material.SetInt("_VFreq", (int)(TargetLength));
+
+        //targetOuterCapWallLeft.GetComponent<Renderer>().material.SetFloat("_VFreq", TargetLength);
         targetOuterCapWallLeft.GetComponent<Renderer>().material.SetColor("_Color1", whiteColor);
         targetOuterCapWallLeft.GetComponent<Renderer>().material.SetColor("_Color2", blackColor);
-        targetCapWallLeft.GetComponent<Renderer>().material.SetInt("_VFreq", (int)TargetDepth);
+
+        //targetCapWallLeft.GetComponent<Renderer>().material.SetFloat("_VFreq", TargetDepth);
         targetCapWallLeft.GetComponent<Renderer>().material.SetColor("_Color1", whiteColor);
         targetCapWallLeft.GetComponent<Renderer>().material.SetColor("_Color2", blackColor);
 
@@ -491,6 +532,58 @@ public class BinaryGame : MonoBehaviour
                 RenderSettings.skybox = sky;
 				break;
 		}
+
+    }
+
+	private float calculateVfreq(int angle, float length)
+	{
+        angle = Math.Abs(angle * (int) length);
+        float stripeWidth = 1.0f;
+        if(angle == 0){
+            return length / stripeWidth;
+        }
+		int angle1 = 90 - angle;
+		int angle2 = 180 - 90 - angle1;
+		/*
+		float hypotenuse = stripeWidth / (float) Math.Sin(angle2);
+        float opposite = (float) Math.Sqrt(Math.Pow((double)hypotenuse, 2.0) - Math.Pow((double)stripeWidth, 2.0));
+        return Math.Abs(length / opposite);
+        */
+		float hypotenuse = stripeWidth / (float) Math.Sin(angle2);
+        Debug.Log(angle1 + ":" + angle2 + ":" + hypotenuse);
+		//float opposite = (float)Math.Sqrt(Math.Pow((double)hypotenuse, 2.0) - Math.Pow((double)stripeWidth, 2.0));
+        return Math.Abs(length / (hypotenuse));
+	}
+
+    private void adjustStripes(GameObject wall, int angle)
+    {
+        if(angle == 0){
+            
+        }
+        // original angles
+        int a = Math.Abs(angle);
+        int b = 90 - angle;
+        int c = 90;
+        float adj;
+        float hyp;
+        float opp = 1.0f;
+        hyp = opp / (float) Math.Sin(a);
+        adj = opp / (float) Math.Tan(a);
+
+
+        float scaledA;
+        float scaledB;
+        float scaledC = 90;
+        float scaledAdj = adj * wall.transform.localScale.x;
+        float scaledOpp = opp * wall.transform.localScale.y;
+        float scaledHyp = (float) Math.Sqrt(Math.Pow(scaledOpp, 2) + Math.Pow(scaledAdj, 2));
+        scaledA = (float) Math.Asin(scaledOpp / scaledHyp);
+        scaledB = 90 - scaledA;
+    
+        Debug.Log(adj + " : " + opp + " : " + " : " + hyp + " : " + scaledAdj +  " : " + scaledOpp + " : " + scaledHyp );
+        Debug.Log(a + " : " + b + " : " + " : " + c + " : " + scaledA + " : " + scaledB + " : " + scaledC);
+
+        wall.GetComponent<Renderer>().material.SetFloat("_Deg", angle);
 
     }
 
@@ -579,7 +672,11 @@ public class BinaryGame : MonoBehaviour
         {
             this.state = "GameOver";
         }
-			
+
+		if (Input.GetKeyDown(KeyCode.R))
+		{
+            this.ResetScenario(Color.black);
+		}
 
         if (Input.GetKeyDown(KeyCode.M))
         {
@@ -988,6 +1085,8 @@ public class BinaryGame : MonoBehaviour
 		Globals.WriteToLogFiles();
 		*/
 	}
+
+
 
 
 }
