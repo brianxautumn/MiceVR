@@ -19,6 +19,7 @@ public class BinaryGame : MonoBehaviour
     public float PresentationLength;
     public InputField PresentationLengthInput;
     public float TunnelWidth;
+    public InputField TunnelWidthInput;
     public InputField TargetDepthInput;
     public float TargetDepth;
     public float MazeHeight;
@@ -34,6 +35,9 @@ public class BinaryGame : MonoBehaviour
     public Dropdown SkyDropdown;
     public Material SkyboxNormal;
     public Shader UnlitShader;
+    public int RewardDuration;
+    public InputField RewardDurationInput;
+
 
     // Time fields
     public int TimeOut;
@@ -142,6 +146,8 @@ public class BinaryGame : MonoBehaviour
         this.WhiteInput.text = this.WhiteLevel.ToString();
         this.TimeOutInput.text = this.TimeOut.ToString();
         this.PenaltyInput.text = this.Penalty.ToString();
+        this.RewardDurationInput.text = this.RewardDuration.ToString();
+        this.TunnelWidthInput.text = this.TunnelWidth.ToString();
 
         this.startingPos = new Vector3(1.0f, 5.0f, 5.0f);
         this.BuildMaze();
@@ -196,11 +202,14 @@ public class BinaryGame : MonoBehaviour
         this.TimeOut = int.Parse(this.TimeOutInput.text);
         this.TargetLength = float.Parse(this.TargetLengthInput.text);
         this.GreyLength = float.Parse(this.GreyLengthInput.text);
+        this.TunnelWidth = float.Parse(this.TunnelWidthInput.text);
         this.PresentationLength = float.Parse(this.PresentationLengthInput.text);
         this.TargetDepth = float.Parse(this.TargetDepthInput.text);
         this.BlackLevel = float.Parse(this.BlackLevelInput.text);
         this.WhiteLevel = float.Parse(this.WhiteInput.text);
         this.greyLevel = (this.BlackLevel + this.WhiteLevel) / 2.0f;
+        this.RewardDuration = int.Parse(this.RewardDurationInput.text);
+
         Debug.Log(greyLevel);
         Color greyColor = new Color(greyLevel, greyLevel, greyLevel);
         Color blackColor = new Color(this.BlackLevel, this.BlackLevel, this.BlackLevel);
@@ -464,7 +473,6 @@ public class BinaryGame : MonoBehaviour
         this.rawSpeedDivider = 160;
         this.rawRotationDivider = 5000;
         this.centralViewVisible = 0;
-        Globals.rewardDur = 33;
         Globals.rewardSize = 2.2f;
 
 		Globals.centralViewVisibleShift = (float)(centralViewVisible * 0.58 / 120);  // 0.45/120
@@ -574,6 +582,7 @@ public class BinaryGame : MonoBehaviour
         // this.player.transform.rotation = this.startingRot;
         Debug.Log("TELEPORTING");
         this.player.transform.position = new Vector3(1.0f, 5.0f, 5.0f);
+        this.player.transform.rotation = Quaternion.identity;
 	}
 
 	/*
@@ -828,9 +837,9 @@ public class BinaryGame : MonoBehaviour
 			if (this.last5Mouse1Y.Count == smoothingWindow)
 				this.last5Mouse1Y.Dequeue();
 
-			if (Globals.gameTurnControl.Equals("roll"))
-				this.last5Mouse1Y.Enqueue(-Globals.sphereInput.mouse1Y);
-			else
+			//if (Globals.gameTurnControl.Equals("roll"))
+			//	this.last5Mouse1Y.Enqueue(-Globals.sphereInput.mouse1Y);
+			//else
 				this.last5Mouse1Y.Enqueue(Globals.sphereInput.mouse1X);
 
 			this.last5Mouse2Y.Enqueue(Globals.sphereInput.mouse2Y);
@@ -902,7 +911,7 @@ public class BinaryGame : MonoBehaviour
 	public void GiveReward(int rewardDur, bool addToTurns)
 	{
         TrialDelay = TimeOut;
-		GameObject.Find("UDPSender").GetComponent<UDPSend>().SendWaterReward(rewardDur);
+		GameObject.Find("UDPSender").GetComponent<UDPSend>().SendWaterReward(this.RewardDuration);
 		player.GetComponent<AudioSource>().Play();
 		Globals.numberOfEarnedRewards++;
 		Globals.sizeOfRewardGiven.Add(Globals.rewardSize / Globals.rewardDur * rewardDur);
