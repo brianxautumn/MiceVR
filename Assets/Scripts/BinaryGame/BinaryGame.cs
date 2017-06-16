@@ -38,6 +38,14 @@ public class BinaryGame : MonoBehaviour
     public int RewardDuration;
     public InputField RewardDurationInput;
 
+    //Angles
+    public int AngleHigh;
+    public InputField AngleHighInput;
+    public int AngleLow;
+    public InputField AngleLowInput;
+    public int AngleStep;
+    public InputField AngleStepInput;
+
 
     // Time fields
     public int TimeOut;
@@ -148,6 +156,9 @@ public class BinaryGame : MonoBehaviour
         this.PenaltyInput.text = this.Penalty.ToString();
         this.RewardDurationInput.text = this.RewardDuration.ToString();
         this.TunnelWidthInput.text = this.TunnelWidth.ToString();
+        this.AngleHighInput.text = this.AngleHigh.ToString();
+        this.AngleLowInput.text = this.AngleLow.ToString();
+        this.AngleStepInput.text = this.AngleStep.ToString();
 
         this.startingPos = new Vector3(1.0f, 5.0f, 5.0f);
         this.BuildMaze();
@@ -209,28 +220,47 @@ public class BinaryGame : MonoBehaviour
         this.WhiteLevel = float.Parse(this.WhiteInput.text);
         this.greyLevel = (this.BlackLevel + this.WhiteLevel) / 2.0f;
         this.RewardDuration = int.Parse(this.RewardDurationInput.text);
+        this.AngleHigh = int.Parse(this.AngleHighInput.text);
+        this.AngleLow = int.Parse(this.AngleLowInput.text);
+        this.AngleStep = int.Parse(this.AngleStepInput.text);
 
-        Debug.Log(greyLevel);
         Color greyColor = new Color(greyLevel, greyLevel, greyLevel);
         Color blackColor = new Color(this.BlackLevel, this.BlackLevel, this.BlackLevel);
         Color whiteColor = new Color(this.WhiteLevel, this.WhiteLevel, this.WhiteLevel);
 
 		presentationIndex = UnityEngine.Random.Range(0, 2);
-        Debug.Log(presentationIndex);
-		
+
+        int selectedStep;
+        int angleRange;
+        int calculatedPresentationAngle;
+
+        if(this.AngleStep == 0){
+            calculatedPresentationAngle = this.AngleHigh;
+        } else{
+            selectedStep = UnityEngine.Random.Range(0, this.AngleStep + 1);
+            angleRange = this.AngleHigh - this.AngleLow;
+            calculatedPresentationAngle = this.AngleLow + ((angleRange / this.AngleStep) * selectedStep);
+        }
+
+        Debug.Log("Presentation calc : " + calculatedPresentationAngle);
+
+		if (UnityEngine.Random.Range(0, 2) == 1)
+		{
+			calculatedPresentationAngle *= -1;
+		}
 
         int presentationDegrees;
         int incorrectDegrees;
 
         if (presentationIndex == 1)
         {
-            presentationDegrees = PresentationAngle;
+            presentationDegrees = calculatedPresentationAngle;
             incorrectDegrees = 0;
         }
         else
         {
 			presentationDegrees = 0;
-			incorrectDegrees = PresentationAngle;
+			incorrectDegrees = calculatedPresentationAngle;
         }
 
         float sidePosition = TunnelWidth / 2.0f;
@@ -380,8 +410,7 @@ public class BinaryGame : MonoBehaviour
         ColliderData colliderDataRight = triggerRight.AddComponent<ColliderData>();
 
         targetSide = (TargetSide)UnityEngine.Random.Range(0, 2);
-        Debug.Log("Target Side is : " + targetSide);
-        Debug.Log(presentationDegrees);
+
         if(targetSide == TargetSide.Left)
         {
             colliderDataLeft.Correct = true;
@@ -578,8 +607,6 @@ public class BinaryGame : MonoBehaviour
 
 	private void TeleportToBeginning()
 	{
-        // this.player.transform.position = this.startingPos;
-        // this.player.transform.rotation = this.startingRot;
         Debug.Log("TELEPORTING");
         this.player.transform.position = new Vector3(1.0f, 5.0f, 5.0f);
         this.player.transform.rotation = Quaternion.identity;
